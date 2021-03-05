@@ -1,0 +1,5 @@
+- hosts: Hosts
+  collections:
+    - namespace.collection_name
+  roles:
+    - role: role_name

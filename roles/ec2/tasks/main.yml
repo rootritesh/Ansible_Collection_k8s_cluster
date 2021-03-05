@@ -1,0 +1,29 @@
+- name: launch K8s master
+  ec2:
+    key_name: "{{ key }}"
+    instance_type: "{{ aws_instance_type }}"
+    image: "{{ ami_id }}"
+    wait: yes
+    count: 1 
+    instance_tags:
+      Name: "k8s_master"
+    vpc_subnet_id: "{{ subnet_id }}"
+    assign_public_ip: yes
+    region: "{{ aws_region }}"
+    state: present
+    group_id: "{{  security_group_id  }}"
+
+- name: launch k8s slave
+  ec2:
+    key_name: "{{ key }}"
+    instance_type: "{{ aws_instance_type }}"
+    image: "{{ ami_id }}"
+    wait: yes
+    count: "{{ count_slave }}"
+    instance_tags:
+      Name: "k8s_slave"
+    vpc_subnet_id: "{{ subnet_id }}"
+    assign_public_ip: yes
+    region: "{{ aws_region }}"
+    state: present
+    group_id: "{{  security_group_id  }}" 

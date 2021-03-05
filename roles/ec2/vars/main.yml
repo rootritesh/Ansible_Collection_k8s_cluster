@@ -1,0 +1,8 @@
+key: key
+aws_instance_type: t2.micro
+count_master: 1
+count_slave: 3
+ami_id: ami-0eeb03e72075b9bcc
+subnet_id: subnet-3c574454
+aws_region: ap-south-1
+security_group_id: sg-00c9eaec249d19d4b

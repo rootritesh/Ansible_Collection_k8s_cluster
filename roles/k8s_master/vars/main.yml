@@ -1,0 +1,6 @@
+---
+pkgs:
+  - kubectl 
+  - kubelet
+  - kubeadm
+  - iproute-tc 

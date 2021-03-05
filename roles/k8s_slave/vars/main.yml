@@ -1,0 +1,7 @@
+---
+# vars file for k8s_slave
+pkgs:
+  - kubectl
+  - kubelet
+  - kubeadm
+  - iproute-tc
