@@ -1,0 +1,85 @@
+- name: Installing docker
+  yum:
+    name: docker
+    state: present
+
+- name: Starting and enabling docker
+  service:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: configuring repo for k8s
+  yum_repository:
+    name: Kubernetes
+    description: K8s repo
+    baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch
+    enabled: yes
+    gpgcheck: yes
+    repo_gpgcheck: yes
+    gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+
+
+- name: Installing packages
+  yum:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ pkgs }}"
+
+
+- name: Starting kubelet and enabling
+  service:
+    name: kubelet
+    state: started
+    enabled: yes
+
+- name: configuring images using kubeadm
+  shell: kubeadm config images pull
+
+- name: Changing Docker drive cgroup to systemd
+  copy:
+    dest : /etc/docker/daemon.json
+    content: |
+      {
+              "exec-opts": ["native.cgroupdriver=systemd"]
+      }
+- name: Restarting docker service
+  service:
+    name: docker
+    state: restarted
+
+- name: Starting k8s network cidr
+  shell: kubeadm init --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=NumCPU --ignore-preflight-errors=Mem
+
+- name: Conf $HOME/.kube
+  file:
+    path: $HOME/.kube
+    state: directory
+
+- name: Copying kube files
+  copy:
+    remote_src: yes
+    src: /etc/kubernetes/admin.conf
+    dest: $HOME/.kube/config
+
+- name: Changing permission file for kube conf
+  file:
+    path: $HOME/.kube/config
+    owner: "{{ ansible_effective_user_id }}"
+    group: "{{ ansible_effective_group_id }}"
+
+- name: Configuring flannel
+  shell: "kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml"
+
+- name: Generating token for k8s
+  shell: kubeadm token create --print-join-command
+  register: token_k8s_master
+
+- name: Token
+  debug:
+    msg: "{{ token_k8s_master.stdout }}"
+
+- name: adding host for token in  
+  add_host:
+    name: "token"
+    token_k8s: "{{ token_k8s_master.stdout }}"
