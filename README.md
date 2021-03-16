@@ -9,11 +9,11 @@ Ansible Collection for configuring Kubernetes cluster on aws on t2.micro
 * you need to run this role using hosts: localhost
 
 ### k8s_master
-* This Role configure the master node of k8s on aws.
+* This Role configure the master node of k8s
 * For running this Role make sure your dynamic inventory configured
 
 ### k8s_slave 
-* This Role configure the 3  slave node of k8s on aws, by default its three but can change using vars.
+* This Role configure slave node for k8s on aws, by default its three but can change using vars.
 * For running this Role make sure your dynamic inventory configured
 
 ## Use This Role
@@ -28,6 +28,8 @@ Ansible Collection for configuring Kubernetes cluster on aws on t2.micro
 
 ## Tested OS
 * Amazon AMI 2
+* REHL8
+* Centos 8
 
 ## License
 MIT
