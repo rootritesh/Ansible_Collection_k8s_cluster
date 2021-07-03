@@ -28,8 +28,7 @@ Ansible Collection for configuring Kubernetes cluster on aws on t2.micro
 
 ## Tested OS
 * Amazon AMI 2
-* REHL8
-* Centos 8
+* RHEL8
 
 ## License
 MIT
